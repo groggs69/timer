@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>72 Hour Fast Timer</title>
+<meta name="description" content="A free fasting timer from 72hourfast.co. Pick your fast, follow it hour by hour, and keep your record on your own phone. No account, no subscription.">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161916" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="72HF Timer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="72 Hour Fast Timer">
+<meta property="og:description" content="A free fasting timer from 72hourfast.co. Pick your fast, follow it hour by hour, and keep your record on your own phone. No account, no subscription.">
+<meta property="og:url" content="https://app.72hourfast.co/">
+<link rel="canonical" href="https://app.72hourfast.co/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23F4F1EA'/%3E%3Cpath d='M26 4a16 16 0 1 0 10 22A13 13 0 0 1 26 4z' fill='%23C2532C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Karla:wght@400;500;700&display=swap">
+<style>
+html{color-scheme:light;-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<style>
+/* Layout: one phone-width column. The ring is the hero, plain sections stack under it,
+   and a three-tab bar is fixed to the bottom edge like a phone app. */
+:root{
+  --bone:#F4F1EA; --band:#EAE5DA; --card:#FBF9F4; --ink:#1A1D1A; --muted:#565B54; --line:#D6CFBF;
+  --ember:#C2532C; --on-ember:#FFFFFF; --orange:#DB7B2B; --mustard:#E3B23C; --sage:#5F6F52; --shadow:#4A2E20;
+  --display:'Fraunces',Georgia,'Times New Roman',serif; --body:'Karla',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bone:#161916; --band:#262B24; --card:#1D211C; --ink:#F1ECE1; --muted:#A9AFA1; --line:#3A4037;
+  --ember:#E3713F; --on-ember:#1A1D1A; --orange:#E38B3F; --mustard:#E3B23C; --sage:#93A583; --shadow:#090B09; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bone:#161916; --band:#262B24; --card:#1D211C; --ink:#F1ECE1; --muted:#A9AFA1; --line:#3A4037;
+  --ember:#E3713F; --on-ember:#1A1D1A; --orange:#E38B3F; --mustard:#E3B23C; --sage:#93A583; --shadow:#090B09; color-scheme:dark }
+
+body{background:var(--bone);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.5}
+*{box-sizing:border-box}
+p,h1,h2,h3,ul,ol{margin:0;padding:0}
+ul,ol{list-style:none}
+a{color:var(--ember);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--mustard);outline-offset:2px;border-radius:6px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+.app{max-width:30rem;margin:0 auto;padding-block:18px 108px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:20px}
+.stack{display:flex;flex-direction:column;gap:20px}
+
+.top{display:flex;align-items:center;gap:12px}
+.moon{width:34px;height:34px;color:var(--ember);flex:none}
+.brand{font-family:var(--display);font-weight:800;font-size:1.3rem;line-height:1.1;font-variation-settings:'SOFT' 100,'WONK' 1}
+.brand-sub{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stripes{display:flex;flex-direction:column;gap:3px}
+.stripes i{display:block;height:5px;border-radius:3px}
+.stripes i:nth-child(1){background:var(--ember)} .stripes i:nth-child(2){background:var(--orange)}
+.stripes i:nth-child(3){background:var(--mustard)} .stripes i:nth-child(4){background:var(--sage)}
+
+.h1{font-family:var(--display);font-weight:800;font-size:2rem;line-height:1.08;text-wrap:balance;font-variation-settings:'SOFT' 100,'WONK' 1}
+.h2{font-family:var(--display);font-weight:800;font-size:1.55rem;line-height:1.12;text-wrap:balance;font-variation-settings:'SOFT' 100,'WONK' 1}
+.h3{font-family:var(--display);font-weight:700;font-size:1.15rem;line-height:1.2;font-variation-settings:'SOFT' 100,'WONK' 1}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
+.lede{font-size:1.1rem}
+.note{font-size:.9rem;color:var(--muted)}
+.err{font-size:.95rem;font-weight:700;color:var(--ember)}
+
+.btn{border:2px solid var(--ember);background:var(--ember);color:var(--on-ember);font-weight:700;border-radius:999px;
+  padding:.8rem 1.4rem;box-shadow:0 4px 0 var(--shadow);min-height:48px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shadow)}
+.btn.big{font-size:1.15rem;padding:1rem 1.4rem;width:100%}
+.btn.small{font-size:.98rem;padding:.55rem 1.1rem;min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink);box-shadow:none}
+.btn.ghost:active{transform:none}
+.link{background:none;border:0;padding:.5rem .2rem;color:var(--ember);font-weight:700;text-decoration:underline;text-underline-offset:3px;min-height:44px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+
+.demo{background:var(--mustard);color:#1A1D1A;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.demo .btn{background:#1A1D1A;border-color:#1A1D1A;color:#F4F1EA;box-shadow:none}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--ink);background:transparent;border-radius:999px;padding:.5rem .95rem;font-weight:700;min-height:44px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bone)}
+.field{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.field label{font-weight:700;font-size:.95rem}
+input[type="number"],input[type="datetime-local"]{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:.55rem .7rem;min-height:46px;max-width:100%}
+input[type="number"]{width:6.5rem}
+details.earlier summary{cursor:pointer;font-weight:700;color:var(--ember);padding:.5rem 0;min-height:44px}
+details.earlier .field{padding-top:6px}
+
+.ringwrap{position:relative;width:min(100%,20rem);aspect-ratio:1;max-width:100%;margin:0 auto}
+.ringwrap svg{width:100%;height:100%;display:block}
+.track{stroke:var(--band)} #arc{stroke:var(--ember)} #arc.done{stroke:var(--sage)}
+#ticks circle{fill:var(--bone)}
+.ringtext{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;pointer-events:none}
+.clock{font-family:var(--display);font-weight:800;font-size:clamp(2.1rem,11vw,2.9rem);line-height:1;font-variant-numeric:tabular-nums;font-variation-settings:'SOFT' 100,'WONK' 0}
+.of{color:var(--muted);font-weight:500}
+.meta{text-align:center;font-weight:500}
+.startrow{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 10px;color:var(--muted);font-size:.95rem}
+.editbox{display:flex;flex-direction:column;gap:10px;align-items:flex-start;border:2px solid var(--line);border-radius:14px;padding:14px}
+
+.stage{background:var(--band);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.stage .next{font-weight:700;font-size:.95rem;padding-top:6px;border-top:1px solid var(--line)}
+.wave{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:16px}
+.wave>div{min-width:0;flex:1 1 12rem;display:flex;flex-direction:column;gap:2px}
+.log{display:flex;flex-direction:column;gap:6px}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:6px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:transparent;font-size:1.3rem;font-weight:700;line-height:1}
+.stepper output,.counter>output{min-width:2.4rem;text-align:center;font-family:var(--display);font-weight:800;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.confirm{border:2px solid var(--ink);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.confirm label{font-weight:700;font-size:.95rem}
+.confirm textarea{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:.55rem .7rem;width:100%;min-height:4.2rem;resize:vertical}
+.done{background:var(--band);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.copybox{font:inherit;font-size:.9rem;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:.5rem .6rem;width:100%;min-height:4.5rem}
+.tight{gap:10px}
+.ladder{display:flex;flex-wrap:wrap;gap:8px}
+.rung{border:2px solid var(--line);border-radius:999px;padding:.3rem .8rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rung.got{background:var(--sage);border-color:var(--sage);color:var(--bone)}
+.rung.next{border-color:var(--ember);color:var(--ember)}
+.promo{border-top:1px solid var(--line);padding-top:16px}
+.hist .q{font-size:.92rem;color:var(--muted);overflow-wrap:anywhere}
+
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stat{background:var(--card);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--display);font-weight:800;font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:.85rem;color:var(--muted)}
+.hist{display:flex;flex-direction:column}
+.hist li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px;border-bottom:1px solid var(--line)}
+.hist li>div{min-width:0;display:flex;flex-direction:column;gap:1px}
+.hist .d{font-size:.85rem;color:var(--muted)}
+.hist .t{font-family:var(--display);font-weight:800;font-size:1.3rem;font-variant-numeric:tabular-nums}
+.hist .s{font-size:.92rem}
+.hist .ok{color:var(--sage);font-weight:700}
+.tag{display:inline-block;background:var(--mustard);color:#1A1D1A;border-radius:999px;font-size:.72rem;font-weight:700;padding:.05rem .5rem;margin-left:6px;letter-spacing:.04em}
+
+.timeline{display:flex;flex-direction:column}
+.timeline li{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:12px;padding-block:14px;border-bottom:1px solid var(--line)}
+.timeline .hh{font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.25rem}
+.timeline li.now .hh{color:var(--ember)}
+.timeline li.now h3::after{content:"You are here";display:inline-block;margin-left:8px;background:var(--ember);color:var(--on-ember);border-radius:999px;font-family:var(--body);font-size:.72rem;font-weight:700;padding:.1rem .55rem;vertical-align:middle}
+.timeline li>div{display:flex;flex-direction:column;gap:3px}
+.links{display:flex;flex-direction:column}
+.links a{display:flex;justify-content:space-between;gap:12px;padding-block:14px;border-bottom:1px solid var(--line);font-weight:700;color:var(--ink);text-decoration:none}
+.links a span{color:var(--ember)}
+.kind{font-family:var(--display);font-style:italic;font-size:1.05rem}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--card);border-top:1px solid var(--line);
+  padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.tabs-in{max-width:28rem;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.tab{border:0;background:transparent;border-radius:999px;padding:.6rem .4rem;font-weight:700;min-height:46px;color:var(--muted)}
+.tab[aria-current="page"]{background:var(--ink);color:var(--bone)}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <svg class="moon" viewBox="0 0 40 40" aria-hidden="true"><path d="M26 4a16 16 0 1 0 10 22A13 13 0 0 1 26 4z" fill="currentColor"></path></svg>
+    <div>
+      <p class="brand">72 Hour Fast</p>
+      <p class="brand-sub">The fasting timer</p>
+    </div>
+  </header>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <div class="demo" id="demoBar" hidden>
+    <p><strong>This is an example fast</strong>, so you can see how the timer looks at hour 37. Nothing here is saved.</p>
+    <button class="btn small" id="demoClear" type="button">Clear it and start mine</button>
+  </div>
+
+  <section id="view-timer">
+    <div id="idle" class="stack" hidden>
+      <h1 class="h1">Pick your fast</h1>
+      <div class="chips" id="chips" role="group" aria-label="How long"></div>
+      <div class="field" id="customRow" hidden>
+        <label for="customH">How many hours? (1 to 72)</label>
+        <input id="customH" type="number" min="1" max="72" step="1" inputmode="numeric" value="30">
+      </div>
+      <p class="lede" id="protoDesc"></p>
+      <p class="note" id="longNote" hidden>Long fasts are not for everyone. Read <a href="https://72hourfast.co/disclaimer/" target="_blank" rel="noopener">the Sensible Bit</a> before you start, especially if you take any medication.</p>
+      <button class="btn big" id="startBtn" type="button">Start my fast</button>
+      <details class="earlier">
+        <summary>Already started? Set the time</summary>
+        <div class="field">
+          <label for="startAt">I stopped eating at</label>
+          <input id="startAt" type="datetime-local">
+          <p class="err" id="startErr" hidden></p>
+        </div>
+      </details>
+      <p class="note" id="lastFast" hidden></p>
+      <p class="promo">New to fasting? <a href="https://72hourfast.co/free-planner/" target="_blank" rel="noopener">The free 7-Day Planner</a> walks you through your first week.</p>
+    </div>
+
+    <div id="running" class="stack" hidden>
+      <div class="ringwrap">
+        <svg viewBox="0 0 300 300" role="img" aria-label="How far through the fast you are">
+          <circle class="track" cx="150" cy="150" r="126" fill="none" stroke-width="18"></circle>
+          <circle id="arc" cx="150" cy="150" r="126" fill="none" stroke-width="18" stroke-linecap="round" transform="rotate(-90 150 150)" stroke-dasharray="0 792"></circle>
+          <g id="ticks"></g>
+        </svg>
+        <div class="ringtext">
+          <p class="eyebrow" id="ringState">Fasting</p>
+          <p class="clock" id="clock">00:00:00</p>
+          <p class="of" id="ofGoal">of 16 hours</p>
+        </div>
+      </div>
+      <p class="meta" id="endsAt"></p>
+      <div class="startrow"><span id="startedAt"></span><button class="link" id="editStart" type="button">Change</button></div>
+      <div class="editbox" id="editBox" hidden>
+        <div class="field">
+          <label for="editAt">I stopped eating at</label>
+          <input id="editAt" type="datetime-local">
+        </div>
+        <p class="err" id="editErr" hidden></p>
+        <div class="row">
+          <button class="btn small" id="editSave" type="button">Save</button>
+          <button class="btn small ghost" id="editCancel" type="button">Cancel</button>
+        </div>
+      </div>
+
+      <article class="stage" aria-live="polite">
+        <p class="eyebrow" id="stageHour"></p>
+        <h2 class="h2" id="stageTitle"></h2>
+        <p id="stageNote"></p>
+        <p class="next" id="stageNext"></p>
+      </article>
+
+      <div class="wave">
+        <div>
+          <h2 class="h3">Hunger knocking?</h2>
+          <p id="waveText">It is a wave. Give it twenty minutes.</p>
+        </div>
+        <button class="btn small" id="waveBtn" type="button">Ride the wave</button>
+      </div>
+
+      <div class="log">
+        <h2 class="h3">This fast</h2>
+        <div class="counter"><span>Glasses of water</span>
+          <div class="stepper"><button type="button" id="waterMinus" aria-label="One less glass of water">&minus;</button><output id="waterN">0</output><button type="button" id="waterPlus" aria-label="One more glass of water">+</button></div>
+        </div>
+        <div class="counter"><span>Mugs of salt water</span>
+          <div class="stepper"><button type="button" id="saltMinus" aria-label="One less mug of salt water">&minus;</button><output id="saltN">0</output><button type="button" id="saltPlus" aria-label="One more mug of salt water">+</button></div>
+        </div>
+        <div class="counter"><span>Hunger waves ridden</span><output id="wavesN">0</output></div>
+      </div>
+
+      <button class="btn big ghost" id="endBtn" type="button">End my fast</button>
+      <div class="confirm" id="endConfirm" hidden>
+        <p id="endMsg"></p>
+        <p><strong>How do you feel?</strong></p>
+        <div class="chips" id="feelChips" role="group" aria-label="How do you feel"></div>
+        <label for="endNote">One line for future you (optional)</label>
+        <textarea id="endNote" maxlength="280"></textarea>
+        <div class="row">
+          <button class="btn small" id="endSave" type="button">End and save</button>
+          <button class="btn small ghost" id="endKeep" type="button">Keep going</button>
+        </div>
+        <button class="link" id="endDiscard" type="button">Started by mistake? Delete without saving</button>
+      </div>
+      <p class="note">Feeling faint, confused or just wrong? Stop and eat. A fast you ended early still counts. This timer keeps a record and is not medical advice. <a href="https://72hourfast.co/disclaimer/" target="_blank" rel="noopener">Read the Sensible Bit.</a></p>
+    </div>
+  </section>
+
+  <section id="view-history" class="stack" hidden>
+    <div class="done" id="doneCard" hidden>
+      <p class="eyebrow">Saved</p>
+      <h2 class="h2" id="doneTitle"></h2>
+      <p id="doneText"></p>
+      <div class="row">
+        <button class="btn small" id="shareBtn" type="button">Copy a brag</button>
+        <a href="https://72hourfast.co/claim-your-journal/" target="_blank" rel="noopener">Write it up in the journal</a>
+      </div>
+      <textarea class="copybox" id="shareBox" readonly hidden aria-label="Text to share"></textarea>
+    </div>
+    <h1 class="h1">Your fasts</h1>
+    <div class="stats">
+      <div class="stat"><b id="stFasts">0</b><span>fasts finished</span></div>
+      <div class="stat"><b id="stHours">0</b><span>hours fasted</span></div>
+      <div class="stat"><b id="stLong">0h</b><span>longest fast</span></div>
+      <div class="stat"><b id="stHit">0</b><span>goals reached</span></div>
+    </div>
+    <div class="stack tight">
+      <h2 class="h3">The ladder</h2>
+      <div class="ladder" id="ladder"></div>
+      <p class="note" id="ladderNote"></p>
+    </div>
+    <ul class="hist" id="histList"></ul>
+    <p id="histEmpty" hidden>No fasts yet. Your first one shows up here when you end it.</p>
+    <p class="note">Your record lives on this phone, in this browser. Nobody else can see it. If you clear your browser data, it goes too.</p>
+    <div class="row"><button class="btn small ghost" id="backupBtn" type="button">Copy my history</button></div>
+    <textarea class="copybox" id="backupBox" readonly hidden aria-label="Your history as text"></textarea>
+  </section>
+
+  <section id="view-guide" class="stack" hidden>
+    <h1 class="h1">Hour by hour</h1>
+    <p class="lede">The short version of a 72-hour fast. The long version, with the why, is in the book.</p>
+    <ol class="timeline" id="timeline"></ol>
+    <div class="links">
+      <a href="https://72hourfast.co/free-planner/" target="_blank" rel="noopener">The free 7-Day Planner <span>Open</span></a>
+      <a href="https://72hourfast.co/the-book/" target="_blank" rel="noopener">The 72-Hour Fast, the book <span>Open</span></a>
+      <a href="https://72hourfast.co/claim-your-journal/" target="_blank" rel="noopener">The free PDF journal <span>Open</span></a>
+      <a href="https://72hourfast.co/disclaimer/" target="_blank" rel="noopener">The Sensible Bit <span>Open</span></a>
+    </div>
+    <p class="kind">And as well as being kind to yourself, remember to always be kind to each other.</p>
+    <p class="note">Greg x</p>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="tabs-in">
+    <button type="button" class="tab" data-view="timer" aria-current="page">Timer</button>
+    <button type="button" class="tab" data-view="history">History</button>
+    <button type="button" class="tab" data-view="guide">Guide</button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'hf72.timer.v1', HOUR = 3600000, WAVE = 20 * 60000, MAXH = 72, C = 2 * Math.PI * 126;
+  var STAGES = [
+    { h: 0, t: 'Last meal done', n: 'The clock is running. Nothing to do yet except get on with your day.' },
+    { h: 12, t: 'Ketones are stirring', n: 'Your body is starting to change fuel. A mug of salted water now makes the next few hours kinder.' },
+    { h: 16.5, t: 'Electrolyte round', n: 'Time for salt water again. A lot of early wobbles turn out to be about salt, not food.' },
+    { h: 18, t: 'The lunchtime wave', n: 'Hunger turns up by the clock, out of habit. It is a wave. Give it twenty minutes and it goes.' },
+    { h: 20, t: 'First good stretch', n: 'The wave has passed and it all goes quiet. Enjoy this bit.' },
+    { h: 24, t: 'The dinner you don’t eat', n: 'One full day done. Tonight the habit of dinner shouts louder than the hunger does. Have an early night.' },
+    { h: 36, t: 'Deep in ketosis', n: 'For a lot of people this is the best day. Clear head, steady energy.' },
+    { h: 40.5, t: 'The mix changes', n: 'The book adjusts the electrolyte mix here. Taking any medication? Read the Sensible Bit first.' },
+    { h: 42, t: 'Feeling the cold', n: 'Cold hands and feet are common on day two. Put a jumper on.' },
+    { h: 48, t: 'Second dinner skipped', n: 'Two full days. Tonight is usually easier than last night.' },
+    { h: 60, t: 'The calm final stretch', n: 'Day three. The book’s rule for today is no coffee.' },
+    { h: 70, t: 'Plan the refeed', n: 'Break it gently. Bone broth first, then eggs and avocado a bit later. No feast.' },
+    { h: 72, t: 'Seventy-two hours', n: 'Done. Eat slowly, and write down how it went while you remember.' }
+  ];
+  var PROTOS = [
+    { h: 12, l: '12:12', d: 'Twelve hours off, twelve on. Dinner to breakfast. You are probably nearly doing this already.' },
+    { h: 14, l: '14:10', d: 'Fourteen off, ten on. A late breakfast does it.' },
+    { h: 16, l: '16:8', d: 'Sixteen off, eight on. The everyday one.' },
+    { h: 18, l: '18:6', d: 'Eighteen off, six on. Two meals, close together.' },
+    { h: 20, l: '20:4', d: 'Twenty off, four on. One long sitting at the table.' },
+    { h: 24, l: '24 h', d: 'Dinner to dinner. One full day.' },
+    { h: 36, l: '36 h', d: 'Dinner, a whole day off, then breakfast.' },
+    { h: 48, l: '48 h', d: 'Two full days. Do a 36 first.' },
+    { h: 72, l: '72 h', d: 'The big one. Three days. Build up to it.' }
+  ];
+  var FEELS = ['Rough', 'Meh', 'OK', 'Good', 'Great'], RUNGS = [12, 14, 16, 18, 20, 24, 36, 48, 72];
+  function $(id) { return document.getElementById(id); }
+
+  var mem = { active: null, history: [], seen: false, goal: 16 };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var o = JSON.parse(raw);
+      if (o && typeof o === 'object') {
+        mem.active = (o.active && typeof o.active.start === 'number') ? o.active : null;
+        mem.history = Array.isArray(o.history) ? o.history : [];
+        mem.seen = !!o.seen;
+        mem.goal = +o.goal || 16;
+      }
+    }
+  } catch (e) { /* no storage: the timer still works until the page closes */ }
+
+  var isDemo = !mem.seen && !mem.active && mem.history.length === 0;
+  function demoState() {
+    var n = Date.now(), d = 24 * HOUR;
+    return { seen: false, goal: 72,
+      active: { start: n - 37.35 * HOUR, goal: 72, water: 9, salt: 4, waves: 3, waveEnd: null },
+      history: [
+        { id: 'd1', start: n - 9 * d, end: n - 9 * d + 24.4 * HOUR, goal: 24, feel: 4, note: 'Hour 18 was the hard bit. Fine after that.', demo: true },
+        { id: 'd2', start: n - 16 * d, end: n - 16 * d + 16.1 * HOUR, goal: 16, demo: true },
+        { id: 'd3', start: n - 23 * d, end: n - 23 * d + 13.5 * HOUR, goal: 16, demo: true }
+      ] };
+  }
+  var S = isDemo ? demoState() : mem;
+  function save() { if (isDemo) return; try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* ignore */ } }
+  function leaveDemo() { isDemo = false; mem.seen = true; mem.active = null; mem.history = []; S = mem; save(); }
+
+  var pick = isDemo ? 16 : (mem.goal || 16), customOn = false, lastStage = -1, wavePassed = false;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function hms(ms) { var s = Math.floor(Math.max(0, ms) / 1000); return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60); }
+  function mmss(ms) { var s = Math.ceil(Math.max(0, ms) / 1000); return pad(Math.floor(s / 60)) + ':' + pad(s % 60); }
+  function dur(ms) { var m = Math.round(Math.max(0, ms) / 60000), h = Math.floor(m / 60); return h ? h + 'h ' + pad(m % 60) + 'm' : (m % 60) + 'm'; }
+  function when(ts) { return new Date(ts).toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  function day(ts) { return new Date(ts).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+  function toInput(ts) { var d = new Date(ts); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function hourLabel(h) { return 'Hour ' + (Math.floor(h) === h ? h : Math.floor(h) + '½'); }
+  function hoursWord(h) { return h + (h === 1 ? ' hour' : ' hours'); }
+  function clampH(v) { v = Math.round(+v); if (!v || v < 1) v = 1; if (v > MAXH) v = MAXH; return v; }
+  function parseStart(v, maxAgo) {
+    if (!v) return { err: 'Pick a date and a time first.' };
+    var t = new Date(v).getTime(), n = Date.now();
+    if (isNaN(t)) return { err: 'That date did not make sense. Try again.' };
+    if (t > n + 60000) return { err: 'That is in the future. Pick a time that has already happened.' };
+    if (n - t > maxAgo) return { err: 'That is too long ago for this timer. Pick a more recent time.' };
+    return { t: Math.min(t, n) };
+  }
+  function showErr(id, msg) { var e = $(id); e.textContent = msg; e.hidden = false; }
+  function hideErr(id) { $(id).hidden = true; }
+
+  /* ---------- idle ---------- */
+  var chipEls = [];
+  PROTOS.forEach(function (p) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = p.l;
+    b.addEventListener('click', function () { customOn = false; pick = p.h; updateIdle(); });
+    $('chips').appendChild(b); chipEls.push({ el: b, h: p.h });
+  });
+  var customChip = document.createElement('button'); customChip.type = 'button'; customChip.className = 'chip'; customChip.textContent = 'Custom';
+  customChip.addEventListener('click', function () { customOn = true; pick = clampH($('customH').value); updateIdle(); $('customH').focus(); });
+  $('chips').appendChild(customChip);
+  $('customH').addEventListener('input', function () { if (customOn) { pick = clampH($('customH').value); updateIdle(); } });
+
+  function updateIdle() {
+    chipEls.forEach(function (c) { c.el.setAttribute('aria-pressed', String(!customOn && c.h === pick)); });
+    customChip.setAttribute('aria-pressed', String(customOn));
+    $('customRow').hidden = !customOn;
+    var p = null; PROTOS.forEach(function (x) { if (x.h === pick) p = x; });
+    $('protoDesc').textContent = customOn ? 'Your own length: ' + hoursWord(pick) + '. This timer stops at 72.' : (p ? p.d : '');
+    $('longNote').hidden = pick < 24;
+    $('startBtn').textContent = 'Start my ' + pick + '-hour fast';
+    var h = S.history.slice().sort(function (a, b) { return b.end - a.end; })[0];
+    $('lastFast').hidden = !h;
+    if (h) $('lastFast').textContent = 'Last fast: ' + dur(h.end - h.start) + ', finished ' + day(h.end) + '.';
+  }
+
+  $('startBtn').addEventListener('click', function () {
+    var t = Date.now(), v = $('startAt').value;
+    if (v) { var r = parseStart(v, MAXH * HOUR); if (r.err) { showErr('startErr', r.err); return; } t = r.t; }
+    hideErr('startErr');
+    if (isDemo) leaveDemo();
+    S.goal = pick;
+    S.active = { start: t, goal: pick, water: 0, salt: 0, waves: 0, waveEnd: null };
+    save(); $('startAt').value = ''; wavePassed = false; render();
+  });
+
+  /* ---------- running ---------- */
+  function drawTicks(goal) {
+    var g = $('ticks'); while (g.firstChild) g.removeChild(g.firstChild);
+    STAGES.forEach(function (s) {
+      if (s.h <= 0 || s.h >= goal) return;
+      var a = (s.h / goal) * 2 * Math.PI - Math.PI / 2;
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', (150 + 126 * Math.cos(a)).toFixed(1)); c.setAttribute('cy', (150 + 126 * Math.sin(a)).toFixed(1)); c.setAttribute('r', '3');
+      g.appendChild(c);
+    });
+  }
+
+  function tick() {
+    var a = S.active; if (!a) return;
+    var now = Date.now(), el = Math.max(0, now - a.start), goalMs = a.goal * HOUR, done = el >= goalMs;
+    $('clock').textContent = hms(el);
+    var arc = $('arc');
+    arc.setAttribute('stroke-dasharray', (C * Math.min(el / goalMs, 1)).toFixed(1) + ' ' + C.toFixed(1));
+    arc.classList.toggle('done', done);
+    $('ringState').textContent = done ? 'Goal reached' : 'Fasting';
+    $('endsAt').textContent = done
+      ? 'You passed ' + hoursWord(a.goal) + ' ' + dur(el - goalMs) + ' ago.' + (el >= MAXH * HOUR ? ' This is where the book stops. Break the fast gently.' : '')
+      : dur(goalMs - el) + ' to go. Goal at ' + when(a.start + goalMs) + '.';
+
+    var eh = el / HOUR, i = 0, k;
+    for (k = 0; k < STAGES.length; k++) { if (STAGES[k].h <= eh) i = k; }
+    if (i !== lastStage) {
+      lastStage = i;
+      $('stageHour').textContent = hourLabel(STAGES[i].h) + (i === 0 ? '' : ' onwards');
+      $('stageTitle').textContent = STAGES[i].t;
+      $('stageNote').textContent = STAGES[i].n;
+      markGuide();
+    }
+    var nx = STAGES[i + 1];
+    $('stageNext').hidden = !nx;
+    if (nx) $('stageNext').textContent = 'Next: ' + nx.t + ', in ' + dur(nx.h * HOUR - el);
+
+    if (a.waveEnd && now >= a.waveEnd) { a.waveEnd = null; a.waves = (a.waves || 0) + 1; wavePassed = true; save(); $('wavesN').textContent = a.waves; }
+    if (a.waveEnd) { $('waveText').textContent = 'This one passes in ' + mmss(a.waveEnd - now) + '. Have a glass of water.'; $('waveBtn').textContent = 'Stop'; }
+    else { $('waveText').textContent = wavePassed ? 'That one has passed. They always do.' : 'It is a wave. Give it twenty minutes.'; $('waveBtn').textContent = 'Ride the wave'; }
+  }
+
+  $('waveBtn').addEventListener('click', function () {
+    var a = S.active; if (!a) return;
+    if (a.waveEnd) { a.waveEnd = null; } else { a.waveEnd = Date.now() + WAVE; wavePassed = false; }
+    save(); tick();
+  });
+
+  function bump(key, by, outId) {
+    var a = S.active; if (!a) return;
+    a[key] = Math.min(99, Math.max(0, (a[key] || 0) + by)); $(outId).textContent = a[key]; save();
+  }
+  $('waterPlus').addEventListener('click', function () { bump('water', 1, 'waterN'); });
+  $('waterMinus').addEventListener('click', function () { bump('water', -1, 'waterN'); });
+  $('saltPlus').addEventListener('click', function () { bump('salt', 1, 'saltN'); });
+  $('saltMinus').addEventListener('click', function () { bump('salt', -1, 'saltN'); });
+
+  $('editStart').addEventListener('click', function () {
+    if (!S.active) return;
+    $('editAt').value = toInput(S.active.start); hideErr('editErr'); $('editBox').hidden = false; $('editAt').focus();
+  });
+  $('editCancel').addEventListener('click', function () { $('editBox').hidden = true; });
+  $('editSave').addEventListener('click', function () {
+    if (!S.active) return;
+    var r = parseStart($('editAt').value, 7 * 24 * HOUR);
+    if (r.err) { showErr('editErr', r.err); return; }
+    S.active.start = r.t; save(); $('editBox').hidden = true; render();
+  });
+
+  var feel = 0, feelEls = [];
+  FEELS.forEach(function (name, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = name; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () { feel = feel === i + 1 ? 0 : i + 1; feelEls.forEach(function (x, k) { x.setAttribute('aria-pressed', String(k + 1 === feel)); }); });
+    $('feelChips').appendChild(b); feelEls.push(b);
+  });
+  function copyText(text, btn, boxId, doneLabel) {
+    function fallback() { var box = $(boxId); box.value = text; box.hidden = false; box.focus(); box.select(); }
+    try { navigator.clipboard.writeText(text).then(function () { btn.textContent = doneLabel; }, fallback); } catch (e) { fallback(); }
+  }
+  var shareText = '';
+  function showDone(f) {
+    var d = f.end - f.start, hrs = Math.floor(d / HOUR);
+    $('doneTitle').textContent = dur(d) + (d >= f.goal * HOUR ? '. Goal reached.' : '. Still counts.');
+    $('doneText').textContent = d >= 24 * HOUR
+      ? 'Break it gently. Bone broth first, then eggs and avocado a bit later. No feast. The full refeed plan is in the book.'
+      : 'Eat a normal meal. There is nothing to make up for.';
+    shareText = (hrs >= 1 ? 'I just finished a ' + hrs + '-hour fast.' : 'I just finished a fast.') + ' Free timer and plain-English guide: https://72hourfast.co';
+    $('shareBtn').textContent = 'Copy a brag'; $('shareBox').hidden = true; $('doneCard').hidden = false;
+  }
+  $('shareBtn').addEventListener('click', function () { copyText(shareText, $('shareBtn'), 'shareBox', 'Copied. Paste it anywhere.'); });
+  $('backupBtn').addEventListener('click', function () {
+    var lines = ['Started,Finished,Hours,Goal,Feeling,Note'];
+    S.history.slice().sort(function (a, b) { return a.end - b.end; }).forEach(function (f) {
+      lines.push([new Date(f.start).toISOString(), new Date(f.end).toISOString(), ((f.end - f.start) / HOUR).toFixed(1), f.goal, f.feel ? FEELS[f.feel - 1] : '', '"' + String(f.note || '').replace(/"/g, '""') + '"'].join(','));
+    });
+    copyText(lines.join('\n'), $('backupBtn'), 'backupBox', 'Copied. Paste it into Notes or an email.');
+  });
+
+  function closeEnd() { $('endConfirm').hidden = true; $('endBtn').hidden = false; }
+  $('endBtn').addEventListener('click', function () {
+    var a = S.active; if (!a) return;
+    var el = Date.now() - a.start;
+    $('endMsg').textContent = el >= a.goal * HOUR
+      ? 'You did it: ' + dur(el) + '. Save it to your history?'
+      : 'You are at ' + dur(el) + ' of ' + hoursWord(a.goal) + '. Ending early still counts. Save it to your history?';
+    feel = 0; feelEls.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); $('endNote').value = '';
+    $('endBtn').hidden = true; $('endConfirm').hidden = false; feelEls[0].focus();
+  });
+  $('endKeep').addEventListener('click', closeEnd);
+  $('endSave').addEventListener('click', function () {
+    var a = S.active; if (!a) return;
+    var entry = { id: String(Date.now()), start: a.start, end: Date.now(), goal: a.goal, water: a.water || 0, salt: a.salt || 0, waves: a.waves || 0, feel: feel, note: $('endNote').value.trim().slice(0, 280), demo: isDemo };
+    S.history.push(entry);
+    S.active = null; save(); closeEnd(); render(); showDone(entry); show('history');
+  });
+  $('endDiscard').addEventListener('click', function () { S.active = null; save(); closeEnd(); render(); });
+
+  /* ---------- history ---------- */
+  function renderHistory() {
+    var h = S.history.slice().sort(function (a, b) { return b.end - a.end; });
+    var total = 0, longest = 0, hit = 0;
+    h.forEach(function (f) { var d = f.end - f.start; total += d; if (d > longest) longest = d; if (d >= f.goal * HOUR) hit++; });
+    $('stFasts').textContent = h.length; $('stHours').textContent = Math.round(total / HOUR);
+    $('stLong').textContent = h.length ? dur(longest) : '0h'; $('stHit').textContent = hit;
+    var lad = $('ladder'), longH = longest / HOUR, nextRung = 0; while (lad.firstChild) lad.removeChild(lad.firstChild);
+    RUNGS.forEach(function (r) {
+      var s = document.createElement('span'), got = longH >= r;
+      if (!got && !nextRung) nextRung = r;
+      s.className = 'rung' + (got ? ' got' : (nextRung === r ? ' next' : '')); s.textContent = (got ? '✓ ' : '') + r + 'h'; lad.appendChild(s);
+    });
+    $('ladderNote').textContent = nextRung ? 'Next rung: ' + hoursWord(nextRung) + '. One rung at a time, no rush.' : 'Top of the ladder. Seventy-two hours done.';
+    var list = $('histList'); while (list.firstChild) list.removeChild(list.firstChild);
+    h.forEach(function (f) {
+      var d = f.end - f.start, ok = d >= f.goal * HOUR;
+      var li = document.createElement('li'), box = document.createElement('div');
+      var p1 = document.createElement('p'); p1.className = 'd'; p1.textContent = 'Finished ' + day(f.end);
+      if (f.demo) { var tg = document.createElement('span'); tg.className = 'tag'; tg.textContent = 'EXAMPLE'; p1.appendChild(tg); }
+      var p2 = document.createElement('p'); p2.className = 't'; p2.textContent = dur(d);
+      var p3 = document.createElement('p'); p3.className = 's' + (ok ? ' ok' : '');
+      p3.textContent = ok ? 'Goal of ' + hoursWord(f.goal) + ' reached' : 'Goal was ' + hoursWord(f.goal) + '. Still counts.';
+      box.appendChild(p1); box.appendChild(p2); box.appendChild(p3);
+      if (f.feel || f.note) { var p4 = document.createElement('p'); p4.className = 'q'; p4.textContent = (f.feel ? 'Felt ' + FEELS[f.feel - 1].toLowerCase() + '. ' : '') + (f.note || ''); box.appendChild(p4); }
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'link'; rm.textContent = 'Remove';
+      rm.addEventListener('click', function () {
+        if (rm.getAttribute('data-armed')) { S.history = S.history.filter(function (x) { return x.id !== f.id; }); if (!isDemo) mem.history = S.history; save(); renderHistory(); updateIdle(); }
+        else { rm.setAttribute('data-armed', '1'); rm.textContent = 'Tap again to remove'; }
+      });
+      rm.addEventListener('blur', function () { rm.removeAttribute('data-armed'); rm.textContent = 'Remove'; });
+      li.appendChild(box); li.appendChild(rm); list.appendChild(li);
+    });
+    $('histEmpty').hidden = h.length > 0;
+  }
+
+  /* ---------- guide ---------- */
+  var guideEls = [];
+  STAGES.forEach(function (s) {
+    var li = document.createElement('li'), hh = document.createElement('span'), box = document.createElement('div'), h3 = document.createElement('h3'), p = document.createElement('p');
+    hh.className = 'hh'; hh.textContent = hourLabel(s.h); h3.className = 'h3'; h3.textContent = s.t; p.textContent = s.n;
+    box.appendChild(h3); box.appendChild(p); li.appendChild(hh); li.appendChild(box); $('timeline').appendChild(li); guideEls.push(li);
+  });
+  function markGuide() { guideEls.forEach(function (li, i) { li.classList.toggle('now', !!S.active && i === lastStage); }); }
+
+  /* ---------- shell ---------- */
+  function render() {
+    var a = S.active;
+    $('demoBar').hidden = !isDemo; $('doneCard').hidden = true;
+    $('idle').hidden = !!a; $('running').hidden = !a;
+    if (a) {
+      $('ofGoal').textContent = 'of ' + hoursWord(a.goal);
+      $('startedAt').textContent = 'Started ' + when(a.start);
+      $('waterN').textContent = a.water || 0; $('saltN').textContent = a.salt || 0; $('wavesN').textContent = a.waves || 0;
+      drawTicks(a.goal); lastStage = -1; tick();
+    } else { lastStage = -1; markGuide(); updateIdle(); }
+    renderHistory();
+  }
+  function show(view) {
+    ['timer', 'history', 'guide'].forEach(function (v) { $('view-' + v).hidden = v !== view; });
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) {
+      if (t.getAttribute('data-view') === view) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
+    });
+    window.scrollTo(0, 0);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) {
+    t.addEventListener('click', function () { show(t.getAttribute('data-view')); });
+  });
+  $('demoClear').addEventListener('click', function () { leaveDemo(); wavePassed = false; render(); show('timer'); });
+
+  render();
+  setInterval(tick, 1000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+})();
+</script>
+</body>
+</html>
